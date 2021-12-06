@@ -144,3 +144,13 @@ shift + alt
 # Change window gap
 alt + {minus,equal}
   bspc config -d focused window_gap $((`bspc config -d focused window_gap` {+,-} 2 ))
+
+# Clipboard screenshots
+ctrl + Print
+	maim | xclip -selection clipboard -t image/png
+
+ctrl + shift + Print
+	maim --select | xclip -selection clipboard -t image/png
+
+ctrl + super + Print
+	maim --window $(xdotool getactivewindow) | xclip -selection clipboard -t image/png   
