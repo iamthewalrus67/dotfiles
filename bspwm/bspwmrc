@@ -22,3 +22,6 @@ nitrogen --restore
 
 # Launch Polybar
 bash ~/.config/polybar/launch.sh
+
+# Launch Picom
+picom -I 0.1 -O 0.1
