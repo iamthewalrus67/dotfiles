@@ -3,7 +3,7 @@ background = #2a2426
 background-alt = #3f3a3c
 foreground = #3f3a3c
 color8 = #3f3a3c
-primary = #bd93f9
+primary = #F8B229
 secondary = #f8f8f2
 
 [bar/bar]

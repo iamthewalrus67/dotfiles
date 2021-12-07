@@ -27,4 +27,4 @@ bash ~/.config/polybar/launch.sh
 setxkbmap -option grp:alt_shift_toggle ua,us
 
 # Launch Picom
-picom -I 0.1 -O 0.1
+picom -I 0.2 -O 0.2
