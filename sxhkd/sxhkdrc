@@ -151,3 +151,7 @@ ctrl + shift + Print
 
 ctrl + super + Print
 	maim --window $(xdotool getactivewindow) | xclip -selection clipboard -t image/png   
+
+# Lock screen
+super + alt + Escape
+	betterlockscreen -l 
