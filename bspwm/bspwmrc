@@ -28,3 +28,6 @@ setxkbmap -option grp:alt_shift_toggle ua,us
 
 # Launch Picom
 picom -I 0.2 -O 0.2
+
+# Set cursor
+xsetroot -cursor_name left_ptr &
