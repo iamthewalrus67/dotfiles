@@ -14,5 +14,11 @@ call plug#begin('~/.config/nvim/autoload/plugged')
     Plug 'scrooloose/NERDTree'
     " Auto pairs for '(' '[' '{'
     Plug 'jiangmiao/auto-pairs'
+    " Dracula theme
+    Plug 'dracula/vim'
+    " Autocomplete
+    Plug 'neoclide/coc.nvim', {'branch': 'release'}
+    " Syntatic language support
+    Plug 'rust-lang/rust.vim'
 
-call plug#end()
+    call plug#end()
