@@ -83,7 +83,6 @@ static const char *upvol[]   = { "/usr/bin/pactl", "set-sink-volume", "0", "+5%"
 static const char *downvol[] = { "/usr/bin/pactl", "set-sink-volume", "0", "-5%",     NULL };
 static const char *mutevol[] = { "/usr/bin/pactl", "set-sink-mute",   "0", "toggle",  NULL };
 
-
 static Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_d,      spawn,          {.v = dmenucmd } },
@@ -127,6 +126,10 @@ static Key keys[] = {
 	{ 0,                       XF86XK_AudioLowerVolume, spawn, {.v = downvol } },
 	{ 0,                       XF86XK_AudioMute, spawn, {.v = mutevol } },
 	{ 0,                       XF86XK_AudioRaiseVolume, spawn, {.v = upvol   } },
+	{ 0,                 XF86XK_MonBrightnessUp,    spawn, SHCMD("xbacklight -inc 5")},
+    	{ 0,                 XF86XK_MonBrightnessDown,  spawn, SHCMD("xbacklight -dec 5") },
+	{ 0,                       XK_Print, spawn, SHCMD("maim | xclip -selection clipboard -t image/png")},
+	{ ControlMask|ShiftMask,                       XK_Print, spawn, SHCMD("maim --select | xclip -selection clipboard -t image/png") },
 };
 
 /* button definitions */
