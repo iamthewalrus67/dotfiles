@@ -79,9 +79,13 @@ static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont,
 static const char *termcmd[]  = { "kitty", NULL };
 
 // volume control
-static const char *upvol[]   = { "/usr/bin/pactl", "set-sink-volume", "0", "+5%",     NULL };
-static const char *downvol[] = { "/usr/bin/pactl", "set-sink-volume", "0", "-5%",     NULL };
-static const char *mutevol[] = { "/usr/bin/pactl", "set-sink-mute",   "0", "toggle",  NULL };
+//static const char *upvol[]   = { "/usr/bin/pactl", "set-sink-volume", "0", "+5%",     NULL };
+//static const char *downvol[] = { "/usr/bin/pactl", "set-sink-volume", "0", "-5%",     NULL };
+//static const char *mutevol[] = { "/usr/bin/pactl", "set-sink-mute",   "0", "toggle",  NULL };
+
+static const char *upvol[]   = { "/usr/bin/amixer", "set", "Master", "5%+",     NULL };
+static const char *downvol[] = { "/usr/bin/amixer", "set", "Master", "5%-",     NULL };
+static const char *mutevol[] = { "/usr/bin/amixer", "set",   "Master", "toggle",  NULL };
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
