@@ -18,16 +18,20 @@ bspc rule -a Kupfer.py focus=on
 bspc rule -a Screenkey manage=off
 
 # Background image
-nitrogen --restore
+nitrogen --restore &
 
 # Launch Polybar
-bash ~/.config/polybar/launch.sh
+bash ~/.config/polybar/launch.sh &
 
 #Change keyboard layout
-setxkbmap -option grp:alt_shift_toggle ua,us
+setxkbmap -option grp:alt_shift_toggle ua,us &
 
 # Launch Picom
-picom -I 0.1 -O 0.1
+killall picom 
+picom -I 0.2 -O 0.2
 
 # Set cursor
-xsetroot -cursor_name left_ptr &
+xsetroot -cursor_name left_ptr
+
+# Fix not working key bindings after reboot
+source ~/.profile
