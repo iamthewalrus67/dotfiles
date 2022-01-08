@@ -34,6 +34,8 @@ static const char *colors[][3]      = {
 
 /* tagging */
 static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+static const char *tagsalt[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+static const int momentaryalttags = 0; /* 1 means alttags will show only when key is held down*/
 
 static const Rule rules[] = {
 	/* xprop(1):
@@ -114,6 +116,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
+	{ MODKEY,                       XK_n,      togglealttag,   {0} },
 	{ MODKEY,                       XK_minus,  setgaps,        {.i = -1 } },
 	{ MODKEY,                       XK_equal,  setgaps,        {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_equal,  setgaps,        {.i = 0  } },
@@ -127,13 +130,13 @@ static Key keys[] = {
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
 	{ MODKEY|ShiftMask,             XK_Escape,      quit,           {0} },
-	{ 0,                       XF86XK_AudioLowerVolume, spawn, {.v = downvol } },
-	{ 0,                       XF86XK_AudioMute, spawn, {.v = mutevol } },
-	{ 0,                       XF86XK_AudioRaiseVolume, spawn, {.v = upvol   } },
-	{ 0,                 XF86XK_MonBrightnessUp,    spawn, SHCMD("xbacklight -inc 5")},
-    	{ 0,                 XF86XK_MonBrightnessDown,  spawn, SHCMD("xbacklight -dec 5") },
-	{ 0,                       XK_Print, spawn, SHCMD("maim | xclip -selection clipboard -t image/png")},
-	{ ControlMask|ShiftMask,                       XK_Print, spawn, SHCMD("maim --select | xclip -selection clipboard -t image/png") },
+	{ 0,                       	XF86XK_AudioLowerVolume, spawn, {.v = downvol } },
+	{ 0,                       	XF86XK_AudioMute, spawn, {.v = mutevol } },
+	{ 0,                       	XF86XK_AudioRaiseVolume, spawn, {.v = upvol   } },
+	{ 0,                 		XF86XK_MonBrightnessUp,    spawn, SHCMD("xbacklight -inc 5")},
+    	{ 0,                 		XF86XK_MonBrightnessDown,  spawn, SHCMD("xbacklight -dec 5") },
+	{ 0,                      	XK_Print, spawn, SHCMD("maim | xclip -selection clipboard -t image/png")},
+	{ ControlMask|ShiftMask,        XK_Print, spawn, SHCMD("maim --select | xclip -selection clipboard -t image/png") },
 };
 
 /* button definitions */
