@@ -1,3 +1,5 @@
 nitrogen --restore &
 
+~/.config/dwm/dwm-bar/dwm_bar.sh &
+
 dwm
