@@ -1,6 +1,6 @@
 nitrogen --restore &
 
-picom -I 0.2 -O 0.2 &
+picom --no-fading-openclose &
 
 ~/.config/dwm/dwm-bar/dwm_bar.sh &
 
