@@ -24,6 +24,15 @@ set ttyfast                 " Speed up scrolling in Vim
 " set noswapfile            " disable creating swap file
 " set backupdir=~/.cache/vim " Directory to store backup files.
 
+colorscheme onedark
+
+" Use :Sw to save as root
+command! -nargs=0 Sw w !sudo tee % > /dev/null
+
+" Ctrl+N to open NerdTree
+nmap <C-n> :NERDTreeToggle<CR>
+
+" Autocomplete stuff
 if exists('*complete_info')
   inoremap <silent><expr> <cr> complete_info(['selected'])['selected'] != -1 ? "\<C-y>" : "\<C-g>u\<CR>"
 endif

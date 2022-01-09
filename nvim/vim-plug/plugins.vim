@@ -12,13 +12,21 @@ call plug#begin('~/.config/nvim/autoload/plugged')
     Plug 'sheerun/vim-polyglot'
     " File Explorer
     Plug 'scrooloose/NERDTree'
+    Plug 'Xuyuanp/nerdtree-git-plugin'
+    " Icons
+    Plug 'ryanoasis/vim-devicons'
     " Auto pairs for '(' '[' '{'
     Plug 'jiangmiao/auto-pairs'
-    " Dracula theme
-    Plug 'dracula/vim'
     " Autocomplete
     Plug 'neoclide/coc.nvim', {'branch': 'release'}
     " Syntatic language support
     Plug 'rust-lang/rust.vim'
+
+
+
+    " OneDark theme
+    Plug 'joshdick/onedark.vim'
+    " Dracula theme
+    Plug 'dracula/vim'
 
     call plug#end()
