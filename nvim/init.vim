@@ -31,6 +31,8 @@ command! -nargs=0 Sw w !sudo tee % > /dev/null
 
 " Ctrl+N to open NerdTree
 nmap <C-n> :NERDTreeToggle<CR>
+vmap <C-_> <plug>NERDCommenterToggle
+nmap <C-_> <plug>NERDCommenterToggle
 
 " Autocomplete stuff
 if exists('*complete_info')
