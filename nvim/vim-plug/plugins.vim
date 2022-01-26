@@ -13,7 +13,7 @@ call plug#begin('~/.config/nvim/autoload/plugged')
     " File Explorer
     Plug 'scrooloose/NERDTree'
     Plug 'Xuyuanp/nerdtree-git-plugin'
-    " Comment lines
+     "Comment lines
     Plug 'scrooloose/nerdcommenter'
     " Icons
     Plug 'ryanoasis/vim-devicons'
@@ -23,8 +23,16 @@ call plug#begin('~/.config/nvim/autoload/plugged')
     Plug 'neoclide/coc.nvim', {'branch': 'release'}
     " Syntatic language support
     Plug 'rust-lang/rust.vim'
-
-
+    " CPP Documentation
+    Plug 'gauteh/vim-cppman'
+    " Tmux navigation
+    Plug 'christoomey/vim-tmux-navigator'
+    " Quickly switch between files
+    Plug 'derekwyatt/vim-fswitch'
+    " Format CPP files
+    Plug 'rhysd/vim-clang-format'
+    " Better syntax highlighting for CPP
+    Plug 'bfrg/vim-cpp-modern'
 
     " OneDark theme
     Plug 'joshdick/onedark.vim'
