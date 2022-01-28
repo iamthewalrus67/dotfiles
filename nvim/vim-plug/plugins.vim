@@ -33,6 +33,19 @@ call plug#begin('~/.config/nvim/autoload/plugged')
     Plug 'rhysd/vim-clang-format'
     " Better syntax highlighting for CPP
     Plug 'bfrg/vim-cpp-modern'
+    " Collection of common configurations for the Nvim LSP client
+    Plug 'neovim/nvim-lspconfig'
+    " Completion framework
+    Plug 'hrsh7th/nvim-cmp'
+    " LSP completion source for nvim-cmp
+    Plug 'hrsh7th/cmp-nvim-lsp'
+    " Snippet completion source for nvim-cmp
+    Plug 'hrsh7th/cmp-vsnip'
+    " Other usefull completion sources
+    Plug 'hrsh7th/cmp-path'
+    Plug 'hrsh7th/cmp-buffer'
+    " To enable more of the features of rust-analyzer, such as inlay hints and more!
+    Plug 'simrat39/rust-tools.nvim'
 
     " OneDark theme
     Plug 'joshdick/onedark.vim'
