@@ -16,16 +16,29 @@ static const int topbar             = 1;        /* 0 means bottom bar */
 //static const char *fonts[]          = { "monospace:size=10", "JoyPixels:pixelsize=10:antialias=true:autohint=true" };
 static const char font[]            = "Iosevka Bold 12";
 static const char dmenufont[]       = "Iosevka Bold 12";
-// background color
-static const char col_gray1[]       = "#282c34";
-// inactive window border color
-static const char col_gray2[]       = "#444444";
-// font color
-static const char col_gray3[]       = "#bbbbbb";
-// current tag and current window font color
-static const char col_gray4[]       = "#eeeeee";
-// tob bar second color and active window border color
-static const char col_cyan[]        = "#282c34";
+// Catppuccin color scheme
+ //background color
+//static const char col_gray1[]       = "#282c34";
+ //inactive window border color
+//static const char col_gray2[]       = "#444444";
+ //font color
+//static const char col_gray3[]       = "#bbbbbb";
+ //current tag and current window font color
+//static const char col_gray4[]       = "#eeeeee";
+ //tob bar second color and active window border color
+//static const char col_cyan[]        = "#282c34";
+
+// Gruvbox color scheme
+//background color
+static const char col_gray1[]       = "#282828";
+//inactive window border color
+static const char col_gray2[]       = "#3c3836";
+//font color
+static const char col_gray3[]       = "#ebdbb2";
+//current tag and current window font color
+static const char col_gray4[]       = "#fbf1c7";
+//tob bar second color and active window border color
+static const char col_cyan[]        = "#689d6a";
 static const char *colors[][3]      = {
 	/*               fg         bg         border   */
 	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
@@ -49,7 +62,7 @@ static const Rule rules[] = {
 	 */
 	/* class      instance    title       tags mask     isfloating   monitor */
 	{ "Gimp",     NULL,       NULL,       0,            1,           -1 },
-	{ "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
+	{ "Firefox",  NULL,       NULL,       0,       0,           -1 },
 };
 
 /* layout(s) */
@@ -90,9 +103,14 @@ static const char *termcmd[]  = { "kitty", NULL };
 //static const char *downvol[] = { "/usr/bin/pactl", "set-sink-volume", "0", "-5%",     NULL };
 //static const char *mutevol[] = { "/usr/bin/pactl", "set-sink-mute",   "0", "toggle",  NULL };
 
-static const char *upvol[]   = { "/usr/bin/amixer", "set", "Master", "5%+",     NULL };
-static const char *downvol[] = { "/usr/bin/amixer", "set", "Master", "5%-",     NULL };
-static const char *mutevol[] = { "/usr/bin/amixer", "set",   "Master", "toggle",  NULL };
+//static const char *upvol[]   = { "/usr/bin/amixer", "set", "Master", "5%+",     NULL };
+//static const char *downvol[] = { "/usr/bin/amixer", "set", "Master", "5%-",     NULL };
+//static const char *mutevol[] = { "/usr/bin/amixer", "set",   "Master", "toggle",  NULL };
+
+// for void linux
+static const char *upvol[]   = { "/usr/bin/pamixer", "-i", "5",     NULL };
+static const char *downvol[] = { "/usr/bin/pamixer", "-d", "5",     NULL };
+static const char *mutevol[] = { "/usr/bin/pamixer", "-t",  NULL };
 
 #include "movestack.c"
 static Key keys[] = {

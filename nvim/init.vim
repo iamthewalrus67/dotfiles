@@ -24,7 +24,7 @@ set ttyfast                 " Speed up scrolling in Vim
 " set noswapfile            " disable creating swap file
 " set backupdir=~/.cache/vim " Directory to store backup files.
 
-colorscheme onedark
+colorscheme gruvbox
 
 " Use :Sw to save as root
 command! -nargs=0 Sw w !sudo tee % > /dev/null
@@ -185,3 +185,16 @@ nnoremap <silent> g0    <cmd>lua vim.lsp.buf.document_symbol()<CR>
 nnoremap <silent> gW    <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
 nnoremap <silent> gd    <cmd>lua vim.lsp.buf.definition()<CR>
 nnoremap <silent> ga    <cmd>lua vim.lsp.buf.code_action()<CR>
+
+" Show buffers in vim-airline
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#buffer_nr_show = 1
+
+" CtrlP fuzzy search
+let g:ctrlp_cmd = 'CtrlPBuffer'
+
+" Switch between buffers with Tab and Shift+Tab
+"nnoremap  <silent>   <tab>  :if &modifiable && !&readonly && &modified <CR> :write<CR> :endif<CR>:bnext<CR>
+"nnoremap  <silent> <s-tab>  :if &modifiable && !&readonly && &modified <CR> :write<CR> :endif<CR>:bprevious<CR>
+nnoremap  <silent>   <tab>  :bnext<CR>
+nnoremap  <silent> <s-tab>  :bprevious<CR>

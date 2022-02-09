@@ -46,10 +46,16 @@ call plug#begin('~/.config/nvim/autoload/plugged')
     Plug 'hrsh7th/cmp-buffer'
     " To enable more of the features of rust-analyzer, such as inlay hints and more!
     Plug 'simrat39/rust-tools.nvim'
+    " Tabline
+    Plug 'vim-airline/vim-airline'
+    " Buffer switch
+    Plug 'ctrlpvim/ctrlp.vim'
 
     " OneDark theme
     Plug 'joshdick/onedark.vim'
     " Dracula theme
     Plug 'dracula/vim'
+    " Grubox theme
+    Plug 'morhetz/gruvbox'
 
     call plug#end()
