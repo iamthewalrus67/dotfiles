@@ -50,6 +50,14 @@ call plug#begin('~/.config/nvim/autoload/plugged')
     Plug 'vim-airline/vim-airline'
     " Buffer switch
     Plug 'ctrlpvim/ctrlp.vim'
+    " Tags generator
+    Plug 'ludovicchabant/vim-gutentags'
+    " View and search LSP symbols, tags
+    Plug 'liuchengxu/vista.vim'
+    " Snippets
+    Plug 'rafamadriz/friendly-snippets'
+    Plug 'hrsh7th/vim-vsnip'
+    Plug 'hrsh7th/vim-vsnip-integ'
 
     " OneDark theme
     Plug 'joshdick/onedark.vim'
