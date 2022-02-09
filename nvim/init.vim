@@ -198,3 +198,10 @@ let g:ctrlp_cmd = 'CtrlPBuffer'
 "nnoremap  <silent> <s-tab>  :if &modifiable && !&readonly && &modified <CR> :write<CR> :endif<CR>:bprevious<CR>
 nnoremap  <silent>   <tab>  :bnext<CR>
 nnoremap  <silent> <s-tab>  :bprevious<CR>
+
+" Resize split windows
+:nnoremap <silent> <c-Up> :resize -1<CR>
+:nnoremap <silent> <c-Down> :resize +1<CR>
+:nnoremap <silent> <c-left> :vertical resize -1<CR>
+:nnoremap <silent> <c-right> :vertical resize +1<CR>
+
