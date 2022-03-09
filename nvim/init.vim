@@ -63,16 +63,16 @@ au BufWinLeave * call clearmatches()
 nnoremap <F5> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar><CR>
 
 " CPP Documentation
-function! s:JbzCppMan()
+function! s:CppMan()
     let old_isk = &iskeyword
     setl iskeyword+=:
     let str = expand("<cword>")
     let &l:iskeyword = old_isk
     execute 'Cppman ' . str
 endfunction
-command! JbzCppMan :call s:JbzCppMan()
+command! CppMan :call s:CppMan()
 
-au FileType cpp nnoremap <buffer>K :JbzCppMan<CR>
+au FileType cpp nnoremap <buffer>K :CppMan<CR>
 
 " Reload nvim config
 nnoremap <leader>sovim :so $MYVIMRC<CR>
@@ -174,7 +174,10 @@ cmp.setup({
 })
 EOF
 
-" Code navigation shortcuts
+" Save and run Rust
+:nnoremap <silent> <F2> :w <bar> Cargo run<CR>
+
+" Code navigation shortcutargo run
 nnoremap <silent> <c-]> <cmd>lua vim.lsp.buf.definition()<CR>
 nnoremap <silent> K     <cmd>lua vim.lsp.buf.hover()<CR>
 nnoremap <silent> gD    <cmd>lua vim.lsp.buf.implementation()<CR>
