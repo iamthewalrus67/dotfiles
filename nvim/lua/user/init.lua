@@ -18,8 +18,8 @@ local config = {
   },
 
   -- Set colorscheme
-  colorscheme = "default_theme",
-  -- colorscheme = "catppuccin",
+  -- colorscheme = "default_theme",
+  colorscheme = "gruvbox",
 
   -- Override highlight groups in any theme
   highlights = {
