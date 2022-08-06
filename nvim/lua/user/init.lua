@@ -122,6 +122,10 @@ local config = {
       { "catppuccin/nvim",
         as = "catppuccin",
       },
+      {
+        "simrat39/rust-tools.nvim",
+        as = "rust-tools",
+      },
     },
     -- All other entries override the setup() call for default plugins
     ["null-ls"] = function(config)
@@ -199,7 +203,7 @@ local config = {
     },
   },
 
-  -- Extend LSP configuration
+   -- Extend LSP configuration
   lsp = {
     -- enable servers that you already have installed without lsp-installer
     servers = {
@@ -235,6 +239,14 @@ local config = {
       --   },
       -- },
     },
+    server_registration = function(server, opts)
+        if server == 'rust_analyzer' then
+          require('rust-tools').setup({server = opts})
+          return
+        end
+
+        require('lspconfig')[server].setup(opts)
+      end,
   },
 
   -- Diagnostics configuration (for vim.diagnostics.config({}))
