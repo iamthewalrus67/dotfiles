@@ -41,8 +41,8 @@ local treesitter = {
   TSVariableBuiltin = { fg = C.yellow },
   TSText = { fg = C.fg },
   TSTextReference = { fg = C.yellow },
-  TSStrong = { fg = C.blue, style = "bold" },
-  TSEmphasis = { fg = C.purple, style = "italic" },
+  TSStrong = { fg = C.blue, bold = true },
+  TSEmphasis = { fg = C.purple, italic = true },
   TSUnderline = { fg = C.fg },
   TSTitle = { fg = C.fg },
   TSLiteral = { fg = C.fg },
@@ -54,6 +54,11 @@ local treesitter = {
   markdownTSLiteral = { fg = C.green },
   markdownTSPunctSpecial = { fg = C.red },
   markdownTSPunctDelimiter = { fg = C.fg },
+  rustTSType = { fg = C.yellow },
+  rustTSFuncMacro = { fg = C.orange },
+  rustTSNamespace = { fg = C.yellow },
+  rustTSConstant = { fg = C.cyan },
+  rustTSKeywordFunction = { fg = C.orange },
 }
 
 return treesitter

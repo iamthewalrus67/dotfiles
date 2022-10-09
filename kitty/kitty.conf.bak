@@ -1,5 +1,5 @@
 # BEGIN_KITTY_THEME
-# One Dark
+# catppuccin
 include current-theme.conf
 # END_KITTY_THEME
 background_opacity 0.9

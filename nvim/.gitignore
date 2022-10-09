@@ -1,0 +1,6 @@
+colors/*
+!colors/default_theme.lua
+plugin
+docs
+lua/packer_compiled.lua
+ginit.vim

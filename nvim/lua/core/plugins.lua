@@ -19,20 +19,14 @@ local astro_plugins = {
 
   -- Notification Enhancer
   ["rcarriga/nvim-notify"] = {
-    event = "VimEnter",
+    event = "UIEnter",
     config = function() require "configs.notify" end,
   },
 
   -- Neovim UI Enhancer
   ["stevearc/dressing.nvim"] = {
-    event = "VimEnter",
+    event = "UIEnter",
     config = function() require "configs.dressing" end,
-  },
-
-  -- Cursorhold fix
-  ["antoinemadec/FixCursorHold.nvim"] = {
-    event = { "BufRead", "BufNewFile" },
-    config = function() vim.g.cursorhold_updatetime = 100 end,
   },
 
   -- Smarter Splits
@@ -43,18 +37,30 @@ local astro_plugins = {
 
   -- Icons
   ["kyazdani42/nvim-web-devicons"] = {
-    event = "VimEnter",
+    module = "nvim-web-devicons",
     config = function() require "configs.icons" end,
+  },
+
+  -- LSP Icons
+  ["onsails/lspkind.nvim"] = {
+    module = "lspkind",
+    config = function() require "configs.lspkind" end,
   },
 
   -- Bufferline
   ["akinsho/bufferline.nvim"] = {
-    after = "nvim-web-devicons",
+    event = "UIEnter",
     config = function() require "configs.bufferline" end,
   },
 
   -- Better buffer closing
   ["famiu/bufdelete.nvim"] = { cmd = { "Bdelete", "Bwipeout" } },
+
+  ["s1n7ax/nvim-window-picker"] = {
+    tag = "v1.*",
+    module = "window-picker",
+    config = function() require "configs.window-picker" end,
+  },
 
   -- File explorer
   ["nvim-neo-tree/neo-tree.nvim"] = {
@@ -67,10 +73,7 @@ local astro_plugins = {
   },
 
   -- Statusline
-  ["feline-nvim/feline.nvim"] = {
-    after = "nvim-web-devicons",
-    config = function() require "configs.feline" end,
-  },
+  ["rebelot/heirline.nvim"] = { config = function() require "configs.heirline" end },
 
   -- Parenthesis highlighting
   ["p00f/nvim-ts-rainbow"] = { after = "nvim-treesitter" },
@@ -138,16 +141,22 @@ local astro_plugins = {
     config = function() astronvim.add_user_cmp_source "nvim_lsp" end,
   },
 
+  -- Package Manager
+  ["williamboman/mason.nvim"] = { config = function() require "configs.mason" end },
+
   -- Built-in LSP
-  ["neovim/nvim-lspconfig"] = { event = "VimEnter" },
+  ["neovim/nvim-lspconfig"] = { config = function() require "configs.lspconfig" end },
 
   -- LSP manager
-  ["williamboman/nvim-lsp-installer"] = {
-    after = "nvim-lspconfig",
-    config = function()
-      require "configs.nvim-lsp-installer"
-      require "configs.lsp"
-    end,
+  ["jayp0521/mason-null-ls.nvim"] = {
+    after = { "mason.nvim", "null-ls.nvim" },
+    config = function() require "configs.mason-null-ls" end,
+  },
+
+  -- LSP manager
+  ["williamboman/mason-lspconfig.nvim"] = {
+    after = { "mason.nvim", "nvim-lspconfig" },
+    config = function() require "configs.mason-lspconfig" end,
   },
 
   -- LSP symbols
@@ -191,7 +200,7 @@ local astro_plugins = {
   },
 
   -- Color highlighting
-  ["norcalli/nvim-colorizer.lua"] = {
+  ["NvChad/nvim-colorizer.lua"] = {
     event = { "BufRead", "BufNewFile" },
     config = function() require "configs.colorizer" end,
   },
@@ -226,12 +235,6 @@ local astro_plugins = {
   ["folke/which-key.nvim"] = {
     module = "which-key",
     config = function() require "configs.which-key" end,
-  },
-
-  -- Smooth scrolling
-  ["declancm/cinnamon.nvim"] = {
-    event = { "BufRead", "BufNewFile" },
-    config = function() require "configs.cinnamon" end,
   },
 
   -- Smooth escaping
