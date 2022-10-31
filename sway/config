@@ -1,3 +1,29 @@
+# Window colors
+set $f_background #fbf1c7
+set $f_border $f_background
+set $f_text #282828
+set $f_indicator $f_background
+set $f_child_border #f9f5d7
+
+set $fi_background #a89984
+set $fi_border $fi_background
+set $fi_text $f_text
+set $fi_indicator $fi_background
+set $fi_child_border $fi_background
+
+set $u_background #a89984
+set $u_border $fi_background
+set $u_text $f_text
+set $u_indicator $fi_background
+set $u_child_border $fi_background
+
+# client.<class>         <border>  <background>    <text>      <indicator>   <child_border> 
+client.focused          "$f_border" "$f_background" "$f_text" "$f_indicator" "$f_child_border"
+
+client.focused_inactive "$fi_border" "$fi_background" "$fi_text" "$fi_indicator" "$fi_child_border"
+
+client.unfocused        "$u_border" "$u_background" "$u_text" "$u_indicator" "$u_child_border"
+
 set $dmenu_background #1d2021
 set $dmenu_selected_background #fbf1c7
 set $dmenu_not_selected_text $dmenu_selected_background
@@ -245,6 +271,7 @@ $mybind $mod+r mode "resize"
 #         inactive_workspace #32323200 #32323200 #5c5c5c
 #     }
 # }
+
 
 # Gaps
 gaps inner 10
