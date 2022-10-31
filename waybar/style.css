@@ -1,3 +1,12 @@
+@define-color bar-background #1d2021;
+@define-color module-background #fbf1c7;
+@define-color workspace-active @module-background;
+@define-color worksace-inactive #d6c4a1;
+@define-color text-color #282828;
+@define-color good #b8bb26;
+@define-color mid #fabd2f;
+@define-color bad #fb4934;
+
 * {
         border: none;
         border-radius: 0;
@@ -6,30 +15,39 @@
         text-shadow: none;
         box-shadow:    none;
         transition-duration: 0s;
-        color: white;
+        color: @text-color;
 }
 
 window {
         font-weight:    bold;
-        color:          white;
+        color:          @text-color;
+        background-color: @bar-background;
+}
+
+#window {
+        background-color: @bar-background;
+        color: @module-background;
+        padding: 2px 10px;
+        margin: 5px 0;
+        border-radius: 2px;
 }
 
 #workspaces button {
         padding: 0 5px;
-        background: #1a1b26;
+        background: @worksace-inactive;
 }
 
 #workspaces button.visible {
-        background: #414868;
+        background: @workspace-active;
 }
 
 #workspaces button.focused {
-        background: #414868;
+        background: @workspace-active;
 }
 
 #pulseaudio, #backlight, #cpu, #network, #language, #clock, #battery {
         padding: 2px 5px;
-        background-color: #414868;
+        background-color: @module-background;
         margin: 5px 0;
         border-radius: 2px;
 }
@@ -38,23 +56,23 @@ window {
 }
 
 #network.disconnected {
-        color: red;
+        color: @bad;
 }
 
 #battery {
-        color: white;
+        color: @text-color;
 }
 
 #battery.critical {
-        color: red;
+        background-color: @bad;
 }
 
 #battery.good {
-        color: green;
+        background-color: @good;
 }
 
 #battery.charging {
-        color: yellow;
+        background-color: @mid;
 }
 
 #tray {
