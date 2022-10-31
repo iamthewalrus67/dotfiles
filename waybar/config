@@ -1,13 +1,13 @@
 {
-    "spacing": 10,
+    "spacing": 15,
     "modules-left": ["sway/workspaces", "sway/mode"],
-    "modules-center": ["clock"],
-    "modules-right": ["pulseaudio", "backlight", "network", "battery", "tray"],
+    "modules-center": ["sway/window"],
+    "modules-right": ["pulseaudio", "backlight", "network", "battery", "sway/language", "clock", "tray"],
     "sway/mode": {
         "format": "<span style=\"italic\">{}</span>"
     },
     "clock": {
-        "timezone": "America/Denver",
+        "timezone": "Europe/Kyiv",
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
         "format-alt": "{:%Y-%m-%d}"
     },
@@ -22,16 +22,14 @@
         "format-icons": ["", "", "", "", ""]
     },
     "network": {
-        "format-wifi": "",
+        "format-wifi": "{essid} ",
         "format-ethernet": "",
         "format-disconnected": "⚠",
         "format-alt": "{ifname}: {ipaddr}/{cidr}"
     },
     "pulseaudio": {
-        "format": "{volume}% {icon} {format_source}",
-        "format-muted": " {format_source}",
-        "format-source": "{volume}% ",
-        "format-source-muted": "",
+        "format": "{volume}% {icon}",
+        "format-muted": "婢",
         "format-icons": {
             "headphone": "",
             "hands-free": "",
@@ -41,13 +39,13 @@
             "car": "",
             "default": ["", "", ""]
         },
-        "on-click": ""
+        "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle"
     },
     "backlight": {
-        "format": "{icon} {percent}%",
-        "format-icons": ["💡"],
-        "on-scroll-down": "light -A 10%",
-        "on-scroll-up": "light -U 10%"
+        "format": "{percent}% {icon}",
+        "format-icons": [""],
+        "on-scroll-down": "light -A 5%",
+        "on-scroll-up": "light -U 5%"
     },
     "tray": {
         "icon-size": 18,
@@ -55,7 +53,7 @@
     },
     "sway/language": {
         "format": "{}",
-        "on-click": "swaymsg 'input * xkb_switch_layout next'",
+        "on-click": "swaymsg input '1:1:AT_Translated_Set_2_keyboard' xkb_switch_layout next",
         "max-length": 50
     }
 }
