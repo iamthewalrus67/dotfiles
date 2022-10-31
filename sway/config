@@ -17,11 +17,11 @@ set $term kitty
 # Your preferred application launcher
 # Note: pass the final command to swaymsg so that the resulting window can be opened
 # on the original workspace that the command was run on.
-set $menu dmenu_path | dmenu_run -fn "Source Code Pro 10" -nb '$dmenu_background' -sf '$dmenu_selected_text' -sb '$dmenu_selected_background' -nf '$dmenu_not_selected_text' | xargs swaymsg exec --
+set $menu dmenu_path | dmenu_run -fn "JetBrains Mono-10" -nb '$dmenu_background' -sf '$dmenu_selected_text' -sb '$dmenu_selected_background' -nf '$dmenu_not_selected_text' | xargs swaymsg exec --
 set $mybind bindsym --to-code
 
 # Font
-font pango:Hack Bold 11
+font pango:JetBrainsMono 11
 
 # Change keyboard layout
 input type:keyboard {

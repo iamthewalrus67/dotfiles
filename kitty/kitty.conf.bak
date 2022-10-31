@@ -1,5 +1,5 @@
 # BEGIN_KITTY_THEME
-# catppuccin
+# GitHub Dark
 include current-theme.conf
 # END_KITTY_THEME
-background_opacity 0.9
+font_family Source Code Pro
