@@ -1,8 +1,7 @@
-# Default config for sway
-#
-# Copy this to ~/.config/sway/config and edit it to your liking.
-#
-# Read `man 5 sway` for a complete reference.
+set $dmenu_background #1d2021
+set $dmenu_selected_background #fbf1c7
+set $dmenu_not_selected_text $dmenu_selected_background
+set $dmenu_selected_text $dmenu_background
 
 ### Variables
 #
@@ -18,11 +17,11 @@ set $term kitty
 # Your preferred application launcher
 # Note: pass the final command to swaymsg so that the resulting window can be opened
 # on the original workspace that the command was run on.
-set $menu dmenu_path | dmenu_run -fn "Source Code Pro 10" | xargs swaymsg exec --
+set $menu dmenu_path | dmenu_run -fn "Source Code Pro 10" -nb '$dmenu_background' -sf '$dmenu_selected_text' -sb '$dmenu_selected_background' -nf '$dmenu_not_selected_text' | xargs swaymsg exec --
 set $mybind bindsym --to-code
 
 # Font
-font pango:Source Code Pro 11
+font pango:Hack Bold 11
 
 # Change keyboard layout
 input type:keyboard {
