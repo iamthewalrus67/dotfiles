@@ -103,13 +103,15 @@ bindswitch --reload --locked lid:on exec $lock
 $mybind $mod+Shift+Escape exec $lock
 
 ### Input configuration
-#
-# Example configuration:
+input "type:touchpad" {
+  tap enabled
+  natural_scroll enabled
+}
 
-  input "type:touchpad" {
-      tap enabled
-      natural_scroll enabled
-  }
+input "type:pointer" {
+  accel_profile "flat"
+  pointer_accel -0.2
+}
 
 
 #
