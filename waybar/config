@@ -2,7 +2,7 @@
     "spacing": 15,
     "modules-left": ["sway/workspaces", "sway/mode"],
     "modules-center": ["sway/window"],
-    "modules-right": ["pulseaudio", "backlight", "network", "battery", "sway/language", "clock", "tray"],
+    "modules-right": ["pulseaudio", "backlight", "bluetooth", "network", "battery", "sway/language", "clock", "tray"],
     "sway/mode": {
         "format": "<span style=\"italic\">{}</span>"
     },
@@ -46,6 +46,18 @@
         "format-icons": [""],
         "on-scroll-down": "light -A 5%",
         "on-scroll-up": "light -U 5%"
+    },
+    "bluetooth": {
+        "format": "{icon}",
+        "format-connected": "{device_alias} {icon}",
+        "format-disabled": "{icon}",
+        "format-icons": {
+            "enabled": "",
+            "disabled": ""
+        },
+        "interval": 30,
+        "on-click": "rfkill toggle bluetooth",
+        "tooltip-format": "{}"
     },
     "tray": {
         "icon-size": 18,
