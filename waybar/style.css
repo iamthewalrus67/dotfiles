@@ -46,6 +46,7 @@ window {
 
 #pulseaudio, #backlight, #bluetooth, #cpu, #network, #language, #clock, #battery {
         padding: 2px 5px;
+        opacity: 1;
         background-color: @module-background;
         color: @text-color;
         margin: 5px 0;
