@@ -48,6 +48,9 @@ local config = {
       spell = true, -- sets vim.opt.spell
       signcolumn = "auto", -- sets vim.opt.signcolumn to auto
       wrap = false, -- sets vim.opt.wrap
+      tabstop = 4,
+      softtabstop = 4,
+      shiftwidth = 4,
     },
     g = {
       mapleader = " ", -- sets vim.g.mapleader
@@ -55,17 +58,14 @@ local config = {
       autopairs_enabled = true, -- enable autopairs at start
       diagnostics_enabled = true, -- enable diagnostics at start
       status_diagnostics_enabled = true, -- enable diagnostics in statusline
+      rustfmt_autosave = 1, -- enable rustfmt on save
     },
   },
   -- If you need more control, you can use the function()...end notation
-  -- options = function(local_vim)
-  --   local_vim.opt.relativenumber = true
-  --   local_vim.g.mapleader = " "
-  --   local_vim.opt.whichwrap = vim.opt.whichwrap - { 'b', 's' } -- removing option from list
-  --   local_vim.opt.shortmess = vim.opt.shortmess + { I = true } -- add to option list
-  --
-  --   return local_vim
-  -- end,
+  options = function(local_vim)
+
+    return local_vim
+  end,
 
   -- Set dashboard header
   header = {
@@ -209,6 +209,8 @@ local config = {
       ["<leader>bt"] = { "<cmd>BufferLineSortByTabs<cr>", desc = "Sort by tabs" },
       -- quick save
       -- ["<C-s>"] = { ":w!<cr>", desc = "Save File" },  -- change description but the same command
+      -- switch between source and header files in C and C++
+      ["<leader>h"] = { "<cmd>ClangdSwitchSourceHeader<cr>", desc = "Switch between source and header files" },
     },
     t = {
       -- setting a mapping to false will disable it
@@ -244,9 +246,13 @@ local config = {
         "morhetz/gruvbox",
         as = "gruvbox",
       },
-    {
+      {
         "simrat39/rust-tools.nvim",
         as = "rust-tools",
+      },
+      {
+        "iamcco/markdown-preview.nvim",
+        run = function() vim.fn["mkdp#util#install"]() end,
       },
     },
     -- All other entries override the require("<key>").setup({...}) call for default plugins

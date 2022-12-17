@@ -8,22 +8,34 @@
 -- @copyright 2022
 -- @license GNU General Public License v3.0
 astronvim.status = { hl = {}, init = {}, provider = {}, condition = {}, component = {}, utils = {}, env = {} }
-local devicons_avail, devicons = pcall(require, "nvim-web-devicons")
 
 astronvim.status.env.modes = {
   ["n"] = { "NORMAL", "normal" },
-  ["no"] = { "N-PENDING", "normal" },
+  ["no"] = { "OP", "normal" },
+  ["nov"] = { "OP", "normal" },
+  ["noV"] = { "OP", "normal" },
+  ["no"] = { "OP", "normal" },
+  ["niI"] = { "NORMAL", "normal" },
+  ["niR"] = { "NORMAL", "normal" },
+  ["niV"] = { "NORMAL", "normal" },
   ["i"] = { "INSERT", "insert" },
   ["ic"] = { "INSERT", "insert" },
-  ["t"] = { "TERMINAL", "insert" },
+  ["ix"] = { "INSERT", "insert" },
+  ["t"] = { "TERM", "terminal" },
+  ["nt"] = { "TERM", "terminal" },
   ["v"] = { "VISUAL", "visual" },
-  ["V"] = { "V-LINE", "visual" },
-  [""] = { "V-BLOCK", "visual" },
+  ["vs"] = { "VISUAL", "visual" },
+  ["V"] = { "LINES", "visual" },
+  ["Vs"] = { "LINES", "visual" },
+  [""] = { "BLOCK", "visual" },
+  ["s"] = { "BLOCK", "visual" },
   ["R"] = { "REPLACE", "replace" },
+  ["Rc"] = { "REPLACE", "replace" },
+  ["Rx"] = { "REPLACE", "replace" },
   ["Rv"] = { "V-REPLACE", "replace" },
   ["s"] = { "SELECT", "visual" },
-  ["S"] = { "S-LINE", "visual" },
-  [""] = { "S-BLOCK", "visual" },
+  ["S"] = { "SELECT", "visual" },
+  [""] = { "BLOCK", "visual" },
   ["c"] = { "COMMAND", "command" },
   ["cv"] = { "COMMAND", "command" },
   ["ce"] = { "COMMAND", "command" },
@@ -31,6 +43,7 @@ astronvim.status.env.modes = {
   ["rm"] = { "MORE", "inactive" },
   ["r?"] = { "CONFIRM", "inactive" },
   ["!"] = { "SHELL", "inactive" },
+  ["null"] = { "null", "inactive" },
 }
 
 local function pattern_match(str, pattern_list)
@@ -72,12 +85,14 @@ function astronvim.status.hl.mode() return { bg = astronvim.status.hl.mode_bg() 
 --- Get the foreground color group for the current mode, good for usage with Heirline surround utility
 -- @return the highlight group for the current mode foreground
 -- @usage local heirline_component = require("heirline.utils").surround({ "|", "|" }, astronvim.status.hl.mode_bg, heirline_component),
+
 function astronvim.status.hl.mode_bg() return astronvim.status.env.modes[vim.fn.mode()][2] end
 
 --- Get the foreground color group for the current filetype
 -- @return the highlight group for the current filetype foreground
 -- @usage local heirline_component = { provider = astronvim.status.provider.fileicon(), hl = astronvim.status.hl.filetype_color },
 function astronvim.status.hl.filetype_color(self)
+  local devicons_avail, devicons = pcall(require, "nvim-web-devicons")
   if not devicons_avail then return {} end
   local _, color = devicons.get_icon_color(
     vim.fn.fnamemodify(vim.api.nvim_buf_get_name(self and self.bufnr or 0), ":t"),
@@ -92,13 +107,12 @@ end
 -- @return The Heirline init function
 -- @usage local heirline_component = { init = astronvim.status.init.breadcrumbs { padding = { left = 1 } } }
 function astronvim.status.init.breadcrumbs(opts)
-  local aerial_avail, aerial = pcall(require, "aerial")
   opts = astronvim.default_tbl(
     opts,
     { separator = " > ", icon = { enabled = true, hl = false }, padding = { left = 0, right = 0 } }
   )
   return function(self)
-    local data = aerial_avail and aerial.get_location(true) or {}
+    local data = require("aerial").get_location(true) or {}
     local children = {}
     -- create a child for each level
     for i, d in ipairs(data) do
@@ -134,28 +148,134 @@ function astronvim.status.init.breadcrumbs(opts)
   end
 end
 
+--- An `init` function to build multiple update events which is not supported yet by Heirline's update field
+-- @param opts an array like table of autocmd events as either just a string or a table with custom patterns and callbacks.
+-- @return The Heirline init function
+-- @usage local heirline_component = { init = astronvim.status.init.update_events { "BufEnter", { "User", pattern = "LspProgressUpdate" } } }
+function astronvim.status.init.update_events(opts)
+  return function(self)
+    if not rawget(self, "once") then
+      local clear_cache = function() self._win_cache = nil end
+      for _, event in ipairs(opts) do
+        local event_opts = { callback = clear_cache }
+        if type(event) == "table" then
+          event_opts.pattern = event.pattern
+          event_opts.callback = event.callback or clear_cache
+          event.pattern = nil
+          event.callback = nil
+        end
+        vim.api.nvim_create_autocmd(event, event_opts)
+      end
+      self.once = true
+    end
+  end
+end
+
 --- A provider function for the fill string
 -- @return the statusline string for filling the empty space
 -- @usage local heirline_component = { provider = astronvim.status.provider.fill }
 function astronvim.status.provider.fill() return "%=" end
 
+--- A provider function for showing if spellcheck is on
+-- @param opts options passed to the stylize function
+-- @return the function for outputting if spell is enabled
+-- @usage local heirline_component = { provider = astronvim.status.provider.spell() }
+-- @see astronvim.status.utils.stylize
+function astronvim.status.provider.spell(opts)
+  opts = astronvim.default_tbl(opts, { str = "", icon = { kind = "Spellcheck" }, show_empty = true })
+  return function() return astronvim.status.utils.stylize(vim.wo.spell and opts.str, opts) end
+end
+
+--- A provider function for showing if paste is enabled
+-- @param opts options passed to the stylize function
+-- @return the function for outputting if paste is enabled
+
+-- @usage local heirline_component = { provider = astronvim.status.provider.paste() }
+-- @see astronvim.status.utils.stylize
+function astronvim.status.provider.paste(opts)
+  opts = astronvim.default_tbl(opts, { str = "", icon = { kind = "Paste" }, show_empty = true })
+  return function() return astronvim.status.utils.stylize(vim.opt.paste:get() and opts.str, opts) end
+end
+
+--- A provider function for displaying if a macro is currently being recorded
+-- @param opts a prefix before the recording register and options passed to the stylize function
+-- @return a function that returns a string of the current recording status
+-- @usage local heirline_component = { provider = astronvim.status.provider.macro_recording() }
+-- @see astronvim.status.utils.stylize
+function astronvim.status.provider.macro_recording(opts)
+  opts = astronvim.default_tbl(opts, { prefix = "@" })
+  return function()
+    local register = vim.fn.reg_recording()
+    if register ~= "" then register = opts.prefix .. register end
+    return astronvim.status.utils.stylize(register, opts)
+  end
+end
+
+--- A provider function for displaying the current search count
+-- @param opts options for `vim.fn.searchcount` and options passed to the stylize function
+-- @return a function that returns a string of the current search location
+-- @usage local heirline_component = { provider = astronvim.status.provider.search_count() }
+-- @see astronvim.status.utils.stylize
+function astronvim.status.provider.search_count(opts)
+  local search_func = vim.tbl_isempty(opts or {}) and function() return vim.fn.searchcount() end
+    or function() return vim.fn.searchcount(opts) end
+  return function()
+    local search_ok, search = pcall(search_func)
+    if search_ok and type(search) == "table" and search.total then
+      return astronvim.status.utils.stylize(
+        string.format(
+          "%s%d/%s%d",
+          search.current > search.maxcount and ">" or "",
+          math.min(search.current, search.maxcount),
+          search.incomplete == 2 and ">" or "",
+          math.min(search.total, search.maxcount)
+        ),
+        opts
+      )
+    end
+  end
+end
+
+--- A provider function for showing the text of the current vim mode
+-- @param opts options for padding the text and options passed to the stylize function
+-- @return the function for displaying the text of the current vim mode
+-- @usage local heirline_component = { provider = astronvim.status.provider.mode_text() }
+-- @see astronvim.status.utils.stylize
 function astronvim.status.provider.mode_text(opts)
-  return function() return astronvim.status.utils.stylize(astronvim.status.env.modes[vim.fn.mode()][1], opts) end
+  local max_length =
+    math.max(unpack(vim.tbl_map(function(str) return #str[1] end, vim.tbl_values(astronvim.status.env.modes))))
+  return function()
+    local text = astronvim.status.env.modes[vim.fn.mode()][1]
+    if opts.pad_text then
+      local padding = max_length - #text
+      if opts.pad_text == "right" then
+        text = string.rep(" ", padding) .. text
+      elseif opts.pad_text == "left" then
+        text = text .. string.rep(" ", padding)
+      elseif opts.pad_text == "center" then
+        text = string.rep(" ", math.floor(padding / 2)) .. text .. string.rep(" ", math.ceil(padding / 2))
+      end
+    end
+    return astronvim.status.utils.stylize(text, opts)
+  end
 end
 
 --- A provider function for showing the percentage of the current location in a document
--- @param opts options passed to the stylize function
+-- @param opts options for Top/Bot text, fixed width, and options passed to the stylize function
 -- @return the statusline string for displaying the percentage of current document location
 -- @usage local heirline_component = { provider = astronvim.status.provider.percentage() }
 -- @see astronvim.status.utils.stylize
 function astronvim.status.provider.percentage(opts)
+  opts = astronvim.default_tbl(opts, { fixed_width = false, edge_text = true })
   return function()
-    local text = "%p%%"
-    local current_line = vim.fn.line "."
-    if current_line == 1 then
-      text = "Top"
-    elseif current_line == vim.fn.line "$" then
-      text = "Bot"
+    local text = "%" .. (opts.fixed_width and "3" or "") .. "p%%"
+    if opts.edge_text then
+      local current_line = vim.fn.line "."
+      if current_line == 1 then
+        text = (opts.fixed_width and " " or "") .. "Top"
+      elseif current_line == vim.fn.line "$" then
+        text = (opts.fixed_width and " " or "") .. "Bot"
+      end
     end
     return astronvim.status.utils.stylize(text, opts)
   end
@@ -214,10 +334,13 @@ end
 -- @usage local heirline_component = { provider = astronvim.status.provider.filename() }
 -- @see astronvim.status.utils.stylize
 function astronvim.status.provider.filename(opts)
-  opts = astronvim.default_tbl(opts, { fname = function(nr) return vim.api.nvim_buf_get_name(nr) end, modify = ":t" })
+  opts = astronvim.default_tbl(
+    opts,
+    { fallback = "[No Name]", fname = function(nr) return vim.api.nvim_buf_get_name(nr) end, modify = ":t" }
+  )
   return function(self)
     local filename = vim.fn.fnamemodify(opts.fname(self and self.bufnr or 0), opts.modify)
-    return astronvim.status.utils.stylize((filename == "" and "[No Name]" or filename), opts)
+    return astronvim.status.utils.stylize((filename == "" and opts.fallback or filename), opts)
   end
 end
 
@@ -280,9 +403,12 @@ end
 -- @usage local heirline_component = { provider = astronvim.status.provider.file_modified() }
 -- @see astronvim.status.utils.stylize
 function astronvim.status.provider.file_modified(opts)
+  opts = astronvim.default_tbl(opts, { str = "", icon = { kind = "FileModified" }, show_empty = true })
   return function(self)
-    local buffer = vim.bo[self and self.bufnr or 0]
-    return astronvim.status.utils.stylize(buffer.modified and astronvim.get_icon "FileModified" or "", opts)
+    return astronvim.status.utils.stylize(
+      astronvim.status.condition.file_modified((self or {}).bufnr) and opts.str,
+      opts
+    )
   end
 end
 
@@ -292,10 +418,10 @@ end
 -- @usage local heirline_component = { provider = astronvim.status.provider.file_read_only() }
 -- @see astronvim.status.utils.stylize
 function astronvim.status.provider.file_read_only(opts)
+  opts = astronvim.default_tbl(opts, { str = "", icon = { kind = "FileReadOnly" }, show_empty = true })
   return function(self)
-    local buffer = vim.bo[self and self.bufnr or 0]
     return astronvim.status.utils.stylize(
-      (not buffer.modifiable or buffer.readonly) and astronvim.get_icon "FileReadOnly" or "",
+      astronvim.status.condition.file_read_only((self or {}).bufnr) and opts.str,
       opts
     )
   end
@@ -307,8 +433,9 @@ end
 -- @usage local heirline_component = { provider = astronvim.status.provider.file_icon() }
 -- @see astronvim.status.utils.stylize
 function astronvim.status.provider.file_icon(opts)
-  if not devicons_avail then return "" end
   return function(self)
+    local devicons_avail, devicons = pcall(require, "nvim-web-devicons")
+    if not devicons_avail then return "" end
     local ft_icon, _ = devicons.get_icon(
       vim.fn.fnamemodify(vim.api.nvim_buf_get_name(self and self.bufnr or 0), ":t"),
       nil,
@@ -421,10 +548,7 @@ end
 -- @usage local heirline_component = { provider = astronvim.status.provider.treesitter_status() }
 -- @see astronvim.status.utils.stylize
 function astronvim.status.provider.treesitter_status(opts)
-  return function()
-    local ts_avail, ts = pcall(require, "nvim-treesitter.parsers")
-    return astronvim.status.utils.stylize((ts_avail and ts.has_parser()) and "TS" or "", opts)
-  end
+  return function() return astronvim.status.utils.stylize(require("nvim-treesitter.parser").has_parser() and "TS" or "", opts) end
 end
 
 --- A provider function for displaying a single string
@@ -452,6 +576,16 @@ function astronvim.status.condition.buffer_matches(patterns)
   return false
 end
 
+--- A condition function if a macro is being recorded
+-- @return boolean of wether or not a macro is currently being recorded
+-- @usage local heirline_component = { provider = "Example Provider", condition = astronvim.status.condition.is_macro_recording }
+function astronvim.status.condition.is_macro_recording() return vim.fn.reg_recording() ~= "" end
+
+--- A condition function if search is visible
+-- @return boolean of wether or not searching is currently visible
+-- @usage local heirline_component = { provider = "Example Provider", condition = astronvim.status.condition.is_hlsearch }
+function astronvim.status.condition.is_hlsearch() return vim.v.hlsearch ~= 0 end
+
 --- A condition function if the current file is in a git repo
 -- @return boolean of wether or not the current file is in a git repo
 -- @usage local heirline_component = { provider = "Example Provider", condition = astronvim.status.condition.is_git_repo }
@@ -463,6 +597,19 @@ function astronvim.status.condition.is_git_repo() return vim.b.gitsigns_head or 
 function astronvim.status.condition.git_changed()
   local git_status = vim.b.gitsigns_status_dict
   return git_status and (git_status.added or 0) + (git_status.removed or 0) + (git_status.changed or 0) > 0
+end
+
+--- A condition function if the current buffer is modified
+-- @return boolean of wether or not the current buffer is modified
+-- @usage local heirline_component = { provider = "Example Provider", condition = astronvim.status.condition.file_modified }
+function astronvim.status.condition.file_modified(bufnr) return vim.bo[bufnr or 0].modified end
+
+--- A condition function if the current buffer is read only
+-- @return boolean of wether or not the current buffer is read only or not modifiable
+-- @usage local heirline_component = { provider = "Example Provider", condition = astronvim.status.condition.file_read_only }
+function astronvim.status.condition.file_read_only(bufnr)
+  local buffer = vim.bo[bufnr or 0]
+  return not buffer.modifiable or buffer.readonly
 end
 
 --- A condition function if the current file has any diagnostics
@@ -482,7 +629,8 @@ end
 --- A condition function if Aerial is available
 -- @return boolean of wether or not aerial plugin is installed
 -- @usage local heirline_component = { provider = "Example Provider", condition = astronvim.status.condition.aerial_available }
-function astronvim.status.condition.aerial_available() return astronvim.is_available "aerial.nvim" end
+-- function astronvim.status.condition.aerial_available() return astronvim.is_available "aerial.nvim" end
+function astronvim.status.condition.aerial_available() return package.loaded["aerial"] end
 
 --- A condition function if LSP is attached
 -- @return boolean of wether or not LSP is attached
@@ -493,24 +641,24 @@ function astronvim.status.condition.lsp_attached() return next(vim.lsp.buf_get_c
 -- @return boolean of wether or not treesitter is active
 -- @usage local heirline_component = { provider = "Example Provider", condition = astronvim.status.condition.treesitter_available }
 function astronvim.status.condition.treesitter_available()
-  local ts_avail, ts = pcall(require, "nvim-treesitter.parsers")
-  return ts_avail and ts.has_parser()
+  return package.loaded["nvim-treesitter"] and require("nvim-treesitter.parsers").has_parser()
 end
 
 --- A utility function to stylize a string with an icon from lspkind, separators, and left/right padding
 -- @param str the string to stylize
--- @param opts options of `{ padding = { left = 0, right = 0 }, separator = { left = "|", right = "|" }, icon = { kind = "NONE", padding = { left = 0, right = 0 } } }`
+-- @param opts options of `{ padding = { left = 0, right = 0 }, separator = { left = "|", right = "|" }, show_empty = false, icon = { kind = "NONE", padding = { left = 0, right = 0 } } }`
 -- @return the stylized string
 -- @usage local string = astronvim.status.utils.stylize("Hello", { padding = { left = 1, right = 1 }, icon = { kind = "String" } })
 function astronvim.status.utils.stylize(str, opts)
   opts = astronvim.default_tbl(opts, {
     padding = { left = 0, right = 0 },
     separator = { left = "", right = "" },
+    show_empty = false,
     icon = { kind = "NONE", padding = { left = 0, right = 0 } },
   })
   local icon = astronvim.pad_string(astronvim.get_icon(opts.icon.kind), opts.icon.padding)
   return str
-      and str ~= ""
+      and (str ~= "" or opts.show_empty)
       and opts.separator.left .. astronvim.pad_string(icon .. str, opts.padding) .. opts.separator.right
     or ""
 end
@@ -526,14 +674,14 @@ function astronvim.status.component.fill() return { provider = astronvim.status.
 -- @usage local heirline_component = astronvim.status.component.file_info()
 function astronvim.status.component.file_info(opts)
   opts = astronvim.default_tbl(opts, {
-    file_icon = { highlight = true, padding = { left = 1, right = 1 } },
+    file_icon = { hl = astronvim.status.hl.filetype_color, padding = { left = 1, right = 1 } },
     filename = {},
     file_modified = { padding = { left = 1 } },
     file_read_only = { padding = { left = 1 } },
     surround = { separator = "left", color = "file_info_bg", condition = astronvim.status.condition.has_filetype },
     hl = { fg = "file_info_fg" },
   })
-  for i, key in ipairs {
+  return astronvim.status.component.builder(astronvim.status.utils.setup_providers(opts, {
     "file_icon",
     "unique_path",
     "filename",
@@ -541,17 +689,7 @@ function astronvim.status.component.file_info(opts)
     "file_modified",
     "file_read_only",
     "close_button",
-  } do
-    opts[i] = opts[key]
-        and {
-          provider = key,
-          opts = opts[key],
-          hl = opts[key].highlight and astronvim.status.hl.filetype_color or opts[key].hl,
-          on_click = opts[key].on_click,
-        }
-      or false
-  end
-  return astronvim.status.component.builder(opts)
+  }))
 end
 
 --- A function to build a set of children components for an entire navigation section
@@ -565,25 +703,78 @@ function astronvim.status.component.nav(opts)
     scrollbar = { padding = { left = 1 }, hl = { fg = "scrollbar" } },
     surround = { separator = "right", color = "nav_bg" },
     hl = { fg = "nav_fg" },
+    update = { "CursorMoved", "BufEnter" },
   })
-  for i, key in ipairs { "ruler", "percentage", "scrollbar" } do
-    opts[i] = opts[key] and { provider = key, opts = opts[key], hl = opts[key].hl } or false
-  end
-  return astronvim.status.component.builder(opts)
+  return astronvim.status.component.builder(
+    astronvim.status.utils.setup_providers(opts, { "ruler", "percentage", "scrollbar" })
+  )
+end
+
+--- A function to build a set of children components for a macro recording section
+-- @param opts options for configuring macro recording and the overall padding
+-- @return The Heirline component table
+-- @usage local heirline_component = astronvim.status.component.macro_recording()
+-- TODO: deprecate on next major version release
+function astronvim.status.component.macro_recording(opts)
+  opts = astronvim.default_tbl(opts, {
+    macro_recording = { icon = { kind = "MacroRecording", padding = { right = 1 } } },
+    surround = {
+      separator = "center",
+      color = "macro_recording_bg",
+      condition = astronvim.status.condition.is_macro_recording,
+    },
+    hl = { fg = "macro_recording_fg", bold = true },
+    update = { "RecordingEnter", "RecordingLeave" },
+  })
+  return astronvim.status.component.builder(astronvim.status.utils.setup_providers(opts, { "macro_recording" }))
+end
+
+--- A function to build a set of children components for information shown in the cmdline
+-- @param opts options for configuring macro recording, search count, and the overall padding
+-- @return The Heirline component table
+-- @usage local heirline_component = astronvim.status.component.cmd_info()
+function astronvim.status.component.cmd_info(opts)
+  opts = astronvim.default_tbl(opts, {
+    macro_recording = {
+      icon = { kind = "MacroRecording", padding = { right = 1 } },
+      condition = astronvim.status.condition.is_macro_recording,
+      update = { "RecordingEnter", "RecordingLeave" },
+    },
+    search_count = {
+      icon = { kind = "Search", padding = { right = 1 } },
+      padding = { left = 1 },
+      condition = astronvim.status.condition.is_hlsearch,
+    },
+    surround = {
+      separator = "center",
+      color = "cmd_info_bg",
+      condition = function() return astronvim.status.condition.is_hlsearch() or astronvim.status.condition.is_macro_recording() end,
+    },
+    condition = function() return vim.opt.cmdheight:get() == 0 end,
+    hl = { fg = "cmd_info_fg" },
+  })
+  return astronvim.status.component.builder(
+    astronvim.status.utils.setup_providers(opts, { "macro_recording", "search_count" })
+  )
 end
 
 --- A function to build a set of children components for a mode section
--- @param opts options for configuring mode text and the overall padding
+-- @param opts options for configuring mode_text, paste, spell, and the overall padding
 -- @return The Heirline component table
 -- @usage local heirline_component = astronvim.status.component.mode { mode_text = true }
 function astronvim.status.component.mode(opts)
-  opts = astronvim.default_tbl(
-    opts,
-    { mode_text = false, surround = { separator = "left", color = astronvim.status.hl.mode_bg }, hl = { fg = "bg" } }
+  opts = astronvim.default_tbl(opts, {
+    mode_text = false,
+    paste = false,
+    spell = false,
+    surround = { separator = "left", color = astronvim.status.hl.mode_bg },
+    hl = { fg = "bg" },
+    update = "ModeChanged",
+  })
+  if not opts["mode_text"] then opts.str = { str = " " } end
+  return astronvim.status.component.builder(
+    astronvim.status.utils.setup_providers(opts, { "mode_text", "str", "paste", "spell" })
   )
-  opts[1] = opts.mode_text and { provider = "mode_text", opts = opts.mode_text }
-    or { provider = "str", opts = { str = " " } }
-  return astronvim.status.component.builder(opts)
 end
 
 --- A function to build a set of children components for an LSP breadcrumbs section
@@ -591,8 +782,10 @@ end
 -- @return The Heirline component table
 -- @usage local heirline_component = astronvim.status.component.breadcumbs()
 function astronvim.status.component.breadcrumbs(opts)
-  opts =
-    astronvim.default_tbl(opts, { padding = { left = 1 }, condition = astronvim.status.condition.aerial_available })
+  opts = astronvim.default_tbl(
+    opts,
+    { padding = { left = 1 }, condition = astronvim.status.condition.aerial_available, update = "CursorMoved" }
+  )
   opts.init = astronvim.status.init.breadcrumbs(opts)
   return opts
 end
@@ -614,9 +807,10 @@ function astronvim.status.component.git_branch(opts)
         end
       end,
     },
+    update = { "User", pattern = "GitSignsUpdate" },
+    init = astronvim.status.init.update_events { "BufEnter" },
   })
-  opts[1] = opts.git_branch and { provider = "git_branch", opts = opts.git_branch } or false
-  return astronvim.status.component.builder(opts)
+  return astronvim.status.component.builder(astronvim.status.utils.setup_providers(opts, { "git_branch" }))
 end
 
 --- A function to build a set of children components for a git difference section
@@ -638,12 +832,20 @@ function astronvim.status.component.git_diff(opts)
       end,
     },
     surround = { separator = "left", color = "git_diff_bg", condition = astronvim.status.condition.git_changed },
+    update = { "User", pattern = "GitSignsUpdate" },
+    init = astronvim.status.init.update_events { "BufEnter" },
   })
-  for i, kind in ipairs { "added", "changed", "removed" } do
-    if type(opts[kind]) == "table" then opts[kind].type = kind end
-    opts[i] = opts[kind] and { provider = "git_diff", opts = opts[kind], hl = { fg = "git_" .. kind } } or false
-  end
-  return astronvim.status.component.builder(opts)
+  return astronvim.status.component.builder(
+    astronvim.status.utils.setup_providers(opts, { "added", "changed", "removed" }, function(p_opts, provider)
+      local out = astronvim.status.utils.build_provider(p_opts, provider)
+      if out then
+        out.provider = "git_diff"
+        out.opts.type = provider
+        out.hl = { fg = "git_" .. provider }
+      end
+      return out
+    end)
+  )
 end
 
 --- A function to build a set of children components for a diagnostics section
@@ -666,12 +868,19 @@ function astronvim.status.component.diagnostics(opts)
         end
       end,
     },
+    update = { "DiagnosticChanged", "BufEnter" },
   })
-  for i, kind in ipairs { "ERROR", "WARN", "INFO", "HINT" } do
-    if type(opts[kind]) == "table" then opts[kind].severity = kind end
-    opts[i] = opts[kind] and { provider = "diagnostics", opts = opts[kind], hl = { fg = "diag_" .. kind } } or false
-  end
-  return astronvim.status.component.builder(opts)
+  return astronvim.status.component.builder(
+    astronvim.status.utils.setup_providers(opts, { "ERROR", "WARN", "INFO", "HINT" }, function(p_opts, provider)
+      local out = astronvim.status.utils.build_provider(p_opts, provider)
+      if out then
+        out.provider = "diagnostics"
+        out.opts.severity = provider
+        out.hl = { fg = "diag_" .. provider }
+      end
+      return out
+    end)
+  )
 end
 
 --- A function to build a set of children components for a Treesitter section
@@ -687,9 +896,10 @@ function astronvim.status.component.treesitter(opts)
       condition = astronvim.status.condition.treesitter_available,
     },
     hl = { fg = "treesitter_fg" },
+    update = { "OptionSet", pattern = "syntax" },
+    init = astronvim.status.init.update_events { "BufEnter" },
   })
-  opts[1] = opts.str and { provider = "str", opts = opts.str } or false
-  return astronvim.status.component.builder(opts)
+  return astronvim.status.component.builder(astronvim.status.utils.setup_providers(opts, { "str" }))
 end
 
 --- A function to build a set of children components for an LSP section
@@ -698,33 +908,40 @@ end
 -- @usage local heirline_component = astronvim.status.component.lsp()
 function astronvim.status.component.lsp(opts)
   opts = astronvim.default_tbl(opts, {
-    lsp_progress = { str = "", padding = { right = 1 } },
-    lsp_client_names = { str = "LSP", icon = { kind = "ActiveLSP", padding = { right = 2 } } },
+    lsp_progress = {
+      str = "",
+      padding = { right = 1 },
+      update = { "User", pattern = { "LspProgressUpdate", "LspRequest" } },
+    },
+    lsp_client_names = {
+      str = "LSP",
+      update = { "LspAttach", "LspDetach", "BufEnter" },
+      icon = { kind = "ActiveLSP", padding = { right = 2 } },
+    },
     hl = { fg = "lsp_fg" },
     surround = { separator = "right", color = "lsp_bg", condition = astronvim.status.condition.lsp_attached },
     on_click = {
       name = "heirline_lsp",
       callback = function()
-        vim.defer_fn(function() vim.cmd "LspInfo" end, 100)
+        vim.defer_fn(function() vim.cmd.LspInfo() end, 100)
       end,
     },
   })
-  opts[1] = {}
-  for i, provider in ipairs { "lsp_progress", "lsp_client_names" } do
-    if type(opts[provider]) == "table" then
-      table.insert(
-        opts[1],
-        opts[provider].str
-            and astronvim.status.utils.make_flexible(
-              i,
-              { provider = astronvim.status.provider[provider](opts[provider]) },
-              { provider = astronvim.status.provider.str(opts[provider]) }
-            )
-          or { provider = provider, opts = opts[provider] }
-      )
-    end
-  end
-  return astronvim.status.component.builder(opts)
+  return astronvim.status.component.builder(
+    astronvim.status.utils.setup_providers(
+      opts,
+      { "lsp_progress", "lsp_client_names" },
+      function(p_opts, provider, i)
+        return p_opts
+            and {
+              flexible = i,
+              astronvim.status.utils.build_provider(p_opts, astronvim.status.provider[provider](p_opts)),
+              astronvim.status.utils.build_provider(p_opts, astronvim.status.provider.str(p_opts)),
+            }
+          or false
+      end
+    )
+  )
 end
 
 --- A general function to build a section of astronvim status providers with highlights, conditions, and section surrounding
@@ -761,34 +978,41 @@ function astronvim.status.component.builder(opts)
     or children
 end
 
+--- Convert a component parameter table to a table that can be used with the component builder
+-- @param opts a table of provider options
+-- @param provider a provider in `astronvim.status.providers`
+-- @return the provider table that can be used in `astronvim.status.component.builder`
+function astronvim.status.utils.build_provider(opts, provider, _)
+  return opts
+      and {
+        provider = provider,
+        opts = opts,
+        condition = opts.condition,
+        on_click = opts.on_click,
+        update = opts.update,
+        hl = opts.hl,
+      }
+    or false
+end
+
+--- Convert key/value table of options to an array of providers for the component builder
+-- @param opts the table of options for the components
+-- @param providers an ordered list like array of providers that are configured in the options table
+-- @param setup a function that takes provider options table, provider name, provider index and returns the setup provider table, optional, default is `astronvim.status.utils.build_provider`
+-- @return the fully setup options table with the appropriately ordered providers
+function astronvim.status.utils.setup_providers(opts, providers, setup)
+  setup = setup or astronvim.status.utils.build_provider
+  for i, provider in ipairs(providers) do
+    opts[i] = setup(opts[provider], provider, i)
+  end
+  return opts
+end
+
 --- A utility function to get the width of the bar
 -- @param is_winbar boolean true if you want the width of the winbar, false if you want the statusline width
 -- @return the width of the specified bar
 function astronvim.status.utils.width(is_winbar)
   return vim.o.laststatus == 3 and not is_winbar and vim.o.columns or vim.api.nvim_win_get_width(0)
-end
-
-local function insert(destination, ...)
-  local new = astronvim.default_tbl({}, destination)
-  for _, child in ipairs { ... } do
-    table.insert(new, astronvim.default_tbl({}, child))
-  end
-  return new
-end
-
---- Create a flexible statusline component
--- @param priority the priority of the element
--- @return the flexible component that switches between components to fit the width
-function astronvim.status.utils.make_flexible(priority, ...)
-  local new = insert({}, ...)
-  new.static = { _priority = priority }
-  new.init = function(self)
-    if not vim.tbl_contains(self._flexible_components, self) then table.insert(self._flexible_components, self) end
-    self:set_win_attr("_win_child_index", nil, 1)
-    self.pick_child = { self:get_win_attr "_win_child_index" }
-  end
-  new.restrict = { _win_child_index = true }
-  return new
 end
 
 --- Surround component with separator and color adjustment
