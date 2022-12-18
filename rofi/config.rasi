@@ -1,29 +1,29 @@
 * {
-    /* Dracula theme colour palette */
-    drac-bgd: #282a36;
-    drac-cur: #44475a;
-    drac-fgd: #f8f8f2;
-    drac-cmt: #6272a4;
-    drac-cya: #8be9fd;
-    drac-grn: #50fa7b;
-    drac-ora: #ffb86c;
-    drac-pnk: #ff79c6;
-    drac-pur: #bd93f9;
-    drac-red: #ff5555;
-    drac-yel: #f1fa8c;
+    /* gruvbox theme colour palette */
+    gruv-bgd: #282828;
+    gruv-cur: #458588;
+    gruv-fgd: #ebdbb2;
+    gruv-cmt: #6272a4;
+    gruv-cya: #8be9fd;
+    gruv-grn: #98971a;
+    gruv-ora: #d65d0e;
+    gruv-pnk: #d3869b;
+    gruv-pur: #b16286;
+    gruv-red: #cc241d;
+    gruv-yel: #d79921;
 
     font: "Jetbrains Mono 12";
 
-    foreground: @drac-fgd;
-    background: @drac-bgd;
-    active-background: @drac-pnk;
-    urgent-background: @drac-red;
+    foreground: @gruv-fgd;
+    background: @gruv-bgd;
+    active-background: @gruv-grn;
+    urgent-background: @gruv-red;
     
     selected-background: @active-background;
     selected-urgent-background: @urgent-background;
     selected-active-background: @active-background;
     separatorcolor: @active-background;
-    bordercolor: #6272a4;
+    bordercolor: @gruv-grn;
 }
 
 #window {
@@ -118,11 +118,11 @@
 }
 #entry {
     spacing:    0;
-    text-color: @drac-cya;
+    text-color: @gruv-fgd;
 }
 #prompt {
     spacing:    0;
-    text-color: @drac-grn;
+    text-color: @gruv-grn;
 }
 #inputbar {
     children:   [ prompt,textbox-prompt-colon,entry,case-indicator ];
@@ -131,6 +131,6 @@
     expand:     false;
     str:        ":";
     margin:     0px 0.3em 0em 0em ;
-    text-color: @drac-grn;
+    text-color: @gruv-grn;
 }
 
