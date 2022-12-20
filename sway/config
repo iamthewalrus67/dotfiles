@@ -131,6 +131,8 @@ input "type:pointer" {
 
     # Start your launcher
     $mybind $mod+d exec $menu
+    # Rofi emoji selector (needs rofi-emodji plugin)
+    $mybind $mod+g exec rofi -modi emoji -show emoji
 
     # Drag floating windows by holding down $mod and left mouse button.
     # Resize them with right mouse button + $mod.
