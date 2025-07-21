@@ -1,0 +1,20 @@
+{
+    "workbench.colorTheme": "One Dark Pro Darker",
+    "github.copilot.enable": {
+        "*": false,
+        "plaintext": false,
+        "markdown": false,
+        "scminput": false,
+        "dockerfile": false,
+        "cpp": false
+    },
+    "vscode-neovim.neovimExecutablePaths.linux": "/opt/nvim/nvim",
+    "vim.neovimConfigPath": "~/.config/nvim/init.vim",
+    "vscode-neovim.neovimInitVimPaths.linux": "~/.config/nvim/init.vim",
+    "vscode-neovim.useCtrlKeys": true,
+    "vscode-neovim.compositeKeys": {
+        "jk": {
+            "command": "vscode-neovim.escape",
+        },
+    },
+}
