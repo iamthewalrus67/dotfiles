@@ -8,13 +8,17 @@
         "dockerfile": false,
         "cpp": false
     },
-    "vscode-neovim.neovimExecutablePaths.linux": "/opt/nvim/nvim",
+    "vscode-neovim.neovimExecutablePaths.linux": "/usr/local/bin/nvim",
     "vim.neovimConfigPath": "~/.config/nvim/init.vim",
+    "vim.useSystemClipboard": true,
     "vscode-neovim.neovimInitVimPaths.linux": "~/.config/nvim/init.vim",
     "vscode-neovim.useCtrlKeys": true,
     "vscode-neovim.compositeKeys": {
         "jk": {
             "command": "vscode-neovim.escape",
         },
+    },
+    "extensions.experimental.affinity": {
+        "asvetliakov.vscode-neovim": 1
     },
 }
