@@ -10,4 +10,12 @@
     "command": "editor.action.commentLine",
     "when": "editorTextFocus && neovim.mode == 'v'"
   }
+  {
+    "key": "ctrl+tab",
+    "command": "workbench.action.nextEditor"
+  },
+  {
+    "key": "ctrl+shift+tab",
+    "command": "workbench.action.previousEditor"
+  }
 ]

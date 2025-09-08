@@ -1,5 +1,5 @@
 {
-    "workbench.colorTheme": "One Dark Pro Darker",
+    "workbench.colorTheme": "Gruvbox Dark Medium",
     "github.copilot.enable": {
         "*": false,
         "plaintext": false,

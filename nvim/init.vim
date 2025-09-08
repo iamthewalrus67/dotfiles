@@ -2,7 +2,7 @@ set clipboard+=unnamedplus
 
 if exists('g:vscode')
 lua << EOF
-  require('vscode')
+  require('vscode_specific')
 EOF
 else
 lua << EOF
