@@ -84,7 +84,7 @@ require('lazy').setup({
     -- configure Lua LSP for Neovim config, runtime and plugins
     -- used for completion, annotations and signatures of Neovim apis
     'folke/lazydev.nvim',
-    ft = 'lua',
+    -- ft = 'lua',
     opts = {
       library = {
         -- Load luvit types when the `vim.uv` word is found
@@ -125,6 +125,19 @@ require('lazy').setup({
           -- WARN: This is not Goto Definition, this is Goto Declaration.
           --  For example, in C this would take you to the header.
           map('grD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+
+          -- This function resolves a difference between neovim nightly (version 0.11) and stable (version 0.10)
+          ---@param client vim.lsp.Client
+          ---@param method vim.lsp.protocol.Method
+          ---@param bufnr? integer some lsp support methods only in specific files
+          ---@return boolean
+          local function client_supports_method(client, method, bufnr)
+            if vim.fn.has 'nvim-0.11' == 1 then
+              return client:supports_method(method, bufnr)
+            else
+              return client.supports_method(method, { bufnr = bufnr })
+            end
+          end
 
           -- The following two autocommands are used to highlight references of the
           -- word under your cursor when your cursor rests there for a little while.
@@ -196,7 +209,6 @@ require('lazy').setup({
 
       local servers = {
         lua_ls = {
-          enabled = true,
           -- cmd = { ... },
           -- filetypes = { ... },
           -- capabilities = {},
@@ -210,17 +222,23 @@ require('lazy').setup({
             },
           },
         },
+        clangd = {
+
+        },
+        rust_analyzer = {
+
+        }
       } -- servers
 
       local ensure_installed = vim.tbl_keys(servers or {})
       -- vim.list_extend(ensure_installed, {
       --   'stylua', -- Used to format Lua code
       -- })
-      require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+      require('mason-tool-installer').setup({ ensure_installed = ensure_installed })
 
       require('mason-lspconfig').setup({
         ensure_installed = {}, -- explicitly set to an empty table (Kickstart populates installs via mason-tool-installer)
-        automatic_enable = false,
+        automatic_enable = true,
         automatic_installation = false,
         handlers = {
           function(server_name)
@@ -233,8 +251,7 @@ require('lazy').setup({
           end,
         },
       })
-      -- print(vim.inspect(require('mason-lspconfig')))
-      
+
     end -- config = function()
   },
   { -- Autocompletion
