@@ -539,5 +539,15 @@ require('lazy').setup({
       end, { desc = '[S]earch [N]eovim files' })
     end,
   },
+
+  {
+    'akinsho/toggleterm.nvim',
+    version = "*",
+    opts = {},
+    config = function ()
+      vim.keymap.set('n', '<C-t>', ':ToggleTerm<CR>', { desc = 'ToggleTerm' })
+      require('toggleterm').setup({})
+    end
+  }
 })
 
