@@ -564,8 +564,8 @@ require('lazy').setup({
     config = function ()
       require('gitblame').setup({
         message_template = " <summary> • <date> • <author> • <<sha>>", -- template for the blame message, check the Message template section for more options
-        date_format = "%m-%d-%Y %H:%M:%S", -- template for the date, check Date format section for more options
-        virtual_text_column = 1,  -- virtual text start column, check Start virtual text at column section for more options
+        date_format = "%d-%m-%Y %H:%M:%S", -- template for the date, check Date format section for more options
+        virtual_text_column = 0,  -- virtual text start column, check Start virtual text at column section for more options
       })
 
       vim.keymap.set('n', '<leader>gb', ':GitBlameToggle<CR>', {noremap=true, desc='[G]it [B]lame'})
@@ -596,6 +596,99 @@ require('lazy').setup({
           vim.g.diff_open = not vim.g.diff_open
       end
       vim.keymap.set('n', '<leader>gd', toggleDiff, { desc = 'Toggle [G]it [D]iff view' })
+    end,
+  },
+
+  {
+    'nvim-lualine/lualine.nvim',
+    dependencies = { 'nvim-tree/nvim-web-devicons', "f-person/git-blame.nvim",},
+    config = function ()
+      local gitblame = require('gitblame')
+      local function get_blame_text()
+        if gitblame.is_blame_text_available() then
+          return gitblame.get_current_blame_text()
+        else
+          return ''
+        end
+      end
+
+      require('lualine').setup({
+          options = {
+            icons_enabled = true,
+            theme = 'auto',
+            component_separators = { left = '', right = ''},
+            section_separators = { left = '', right = ''},
+            disabled_filetypes = {
+              statusline = {},
+              winbar = {},
+            },
+            ignore_focus = {},
+            always_divide_middle = true,
+            always_show_tabline = true,
+            globalstatus = false,
+            refresh = {
+              statusline = 1000,
+              tabline = 1000,
+              winbar = 1000,
+              refresh_time = 16, -- ~60fps
+              events = {
+                'WinEnter',
+                'BufEnter',
+                'BufWritePost',
+                'SessionLoadPost',
+                'FileChangedShellPost',
+                'VimResized',
+                'Filetype',
+                'CursorMoved',
+                'CursorMovedI',
+                'ModeChanged',
+              },
+            }
+          },
+          sections = {
+            lualine_a = {'mode'},
+            lualine_b = {'branch', get_blame_text, 'diff', 'diagnostics'},
+            lualine_c = {'filename'},
+            lualine_x = {'encoding', 'fileformat', 'filetype'},
+            lualine_y = {'progress'},
+            lualine_z = {'location'}
+          },
+          inactive_sections = {
+            lualine_a = {},
+            lualine_b = {},
+            lualine_c = {'filename'},
+            lualine_x = {'location'},
+            lualine_y = {},
+            lualine_z = {}
+          },
+          tabline = {},
+          winbar = {},
+          inactive_winbar = {},
+          extensions = {}
+      })
+    end
+  },
+
+  {
+    'nvim-treesitter/nvim-treesitter-context',
+    config = function ()
+      require('treesitter-context').setup({
+          enable = false, -- Enable this plugin (Can be enabled/disabled later via commands)
+          multiwindow = false, -- Enable multiwindow support.
+          max_lines = 0, -- How many lines the window should span. Values <= 0 mean no limit.
+          min_window_height = 0, -- Minimum editor window height to enable context. Values <= 0 mean no limit.
+          line_numbers = true,
+          multiline_threshold = 20, -- Maximum number of lines to show for a single context
+          trim_scope = 'outer', -- Which context lines to discard if `max_lines` is exceeded. Choices: 'inner', 'outer'
+          mode = 'cursor',  -- Line used to calculate context. Choices: 'cursor', 'topline'
+          -- Separator between context and content. Should be a single character string, like '-'.
+          -- When separator is set, the context will only show up when there are at least 2 lines above cursorline.
+          separator = nil,
+          zindex = 20, -- The Z-index of the context window
+          on_attach = nil, -- (fun(buf: integer): boolean) return false to disable attaching
+      })
+
+      vim.keymap.set('n', '<leader>tc', ':TSContext toggle<CR>', {desc = '[T]oggle [C]ontext'})
     end,
   },
 }
