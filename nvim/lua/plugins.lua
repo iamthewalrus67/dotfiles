@@ -384,13 +384,16 @@ require('lazy').setup({
 
   { -- Colorscheme
     'sainnhe/gruvbox-material',
+    enabled = true,
     priority = 1000, -- Make sure to load this before all the other start plugins.
     config = function()
       vim.g.gruvbox_material_enable_italic = false
-      vim.g.background = 'dark'
+      vim.o.background = 'dark'
+      vim.g.gruvbox_material_background = 'medium'
       vim.cmd.colorscheme('gruvbox-material')
     end,
   },
+
 
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
@@ -577,7 +580,24 @@ require('lazy').setup({
     opts = {
       position = "right",
       width = 60
-  }
+  },
+
+  { -- git diff
+    'sindrets/diffview.nvim',
+    config = function ()
+      require('diffview').setup({})
+      vim.g.diff_open = false
+      local toggleDiff = function()
+          if vim.g.diff_open then
+            vim.cmd('DiffviewClose')
+          else
+            vim.cmd('DiffviewOpen')
+          end
+          vim.g.diff_open = not vim.g.diff_open
+      end
+      vim.keymap.set('n', '<leader>gd', toggleDiff, { desc = 'Toggle [G]it [D]iff view' })
+    end,
+  },
 }
 })
 
