@@ -153,6 +153,7 @@ require('lazy').setup({
 
           vim.keymap.set('n', '<C-_>', 'gcc', { desc = 'Toggle comment', remap = true, silent = true })
 
+          vim.keymap.set('v', '<C-_>', 'gc', { desc = 'Toggle comment', remap = true, silent = true })
 
           -- This function resolves a difference between neovim nightly (version 0.11) and stable (version 0.10)
           ---@param client vim.lsp.Client
@@ -340,7 +341,7 @@ require('lazy').setup({
         -- <c-k>: Toggle signature help
         --
         -- See :h blink-cmp-config-keymap for defining your own keymap
-        preset = 'default',
+        preset = 'enter',
 
         -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
         --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
@@ -385,7 +386,7 @@ require('lazy').setup({
     'sainnhe/gruvbox-material',
     priority = 1000, -- Make sure to load this before all the other start plugins.
     config = function()
-      vim.g.gruvbox_material_enable_italic = true
+      vim.g.gruvbox_material_enable_italic = false
       vim.g.background = 'dark'
       vim.cmd.colorscheme('gruvbox-material')
     end,
@@ -448,7 +449,7 @@ require('lazy').setup({
     version = '^1.0.0', -- optional: only update when a new 1.x version is released
   },
 
-  
+
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
     event = 'VimEnter',
@@ -559,16 +560,24 @@ require('lazy').setup({
     event = "VeryLazy",
     config = function ()
       require('gitblame').setup({
-      
-        enabled = true,  -- if you want to enable the plugin
         message_template = " <summary> • <date> • <author> • <<sha>>", -- template for the blame message, check the Message template section for more options
         date_format = "%m-%d-%Y %H:%M:%S", -- template for the date, check Date format section for more options
         virtual_text_column = 1,  -- virtual text start column, check Start virtual text at column section for more options
       })
 
       vim.keymap.set('n', '<leader>gb', ':GitBlameToggle<CR>', {noremap=true, desc='[G]it [B]lame'})
-      vim.g.gitblame_enabled = 0
+      vim.cmd('GitBlameDisable')
     end
   },
+
+  { -- Documentation
+    "amrbashir/nvim-docs-view",
+    lazy = true,
+    cmd = "DocsViewToggle",
+    opts = {
+      position = "right",
+      width = 60
+  }
+}
 })
 
