@@ -437,7 +437,9 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>e', ':Neotree toggle<CR>', { desc = 'Open Neotree' })
     end
   },
-  {'romgrk/barbar.nvim',
+  {
+    'romgrk/barbar.nvim',
+    enabled = false,
     dependencies = {
       'lewis6991/gitsigns.nvim', -- OPTIONAL: for git status
       'nvim-tree/nvim-web-devicons', -- OPTIONAL: for file icons
@@ -452,6 +454,18 @@ require('lazy').setup({
     version = '^1.0.0', -- optional: only update when a new 1.x version is released
   },
 
+  {
+    "akinsho/bufferline.nvim",
+    enabled = true,
+    config = function ()
+      require('bufferline').setup({})
+
+      vim.keymap.set("n", "L", ":BufferLineCycleNext<CR>", { desc = "Next buffer", silent = true })
+      vim.keymap.set("n", "H", ":BufferLineCyclePrev<CR>", { desc = "Previous buffer", silent = true })
+      vim.keymap.set("n", "<leader>l", ":BufferLineMoveNext<CR>", { desc = "Move buffer right", silent = true })
+      vim.keymap.set("n", "<leader>h", ":BufferLineMovePrev<CR>", { desc = "Move buffer left", silent = true })
+    end
+  },
 
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',

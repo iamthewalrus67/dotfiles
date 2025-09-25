@@ -1,6 +1,3 @@
-vim.keymap.set('n', '<leader>h>', ':tabprevious<CR>')
-vim.keymap.set('n', '<leader>l', ':tabnext<CR>')
-
 vim.schedule(function()
   vim.o.clipboard = 'unnamedplus'
 end)
