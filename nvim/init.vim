@@ -4,7 +4,7 @@ lua << EOF
 EOF
 else
 lua << EOF
-  require('terminal')
+  require('terminal_specific')
 EOF
 endif
 

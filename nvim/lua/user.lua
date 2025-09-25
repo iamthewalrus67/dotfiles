@@ -33,5 +33,5 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 require('keymaps')
-require('plugins')
+require('lazy_spec')
 
