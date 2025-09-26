@@ -1,3 +1,5 @@
+vim.keymap.set('n', '<leader>tc', ':TSContext toggle<CR>', {desc = '[T]oggle [C]ontext'})
+
 return {
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
@@ -35,6 +37,7 @@ return {
 
   {
     'nvim-treesitter/nvim-treesitter-context',
+    cmd = 'TSContext',
     config = function ()
       require('treesitter-context').setup({
           enable = false, -- Enable this plugin (Can be enabled/disabled later via commands)
@@ -51,8 +54,6 @@ return {
           zindex = 20, -- The Z-index of the context window
           on_attach = nil, -- (fun(buf: integer): boolean) return false to disable attaching
       })
-
-      vim.keymap.set('n', '<leader>tc', ':TSContext toggle<CR>', {desc = '[T]oggle [C]ontext'})
     end,
   },
 }
