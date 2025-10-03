@@ -47,7 +47,12 @@ return {
         sections = {
           lualine_a = {'mode'},
           lualine_b = {'branch', get_blame_text, 'diff', 'diagnostics'},
-          lualine_c = {'filename'},
+          lualine_c = {
+            {
+              'filename',
+              path = 1, -- Relative path
+            },
+          },
           lualine_x = {'encoding', 'fileformat', 'filetype'},
           lualine_y = {'progress'},
           lualine_z = {'location'}
