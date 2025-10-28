@@ -32,6 +32,14 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
+-- Associate .tpp files with C++
+vim.api.nvim_create_autocmd({"BufNewFile", "BufRead"}, {
+  pattern = "*.tpp",
+  callback = function()
+    vim.bo.filetype = "cpp"
+  end,
+})
+
 require('keymaps')
 require('lazy_spec')
 
