@@ -177,6 +177,10 @@ return {
         rust_analyzer = {
 
         },
+        basedpyright = {
+        },
+        ruff = {
+        },
       } -- servers
 
       local ensure_installed = vim.tbl_keys(servers or {})
