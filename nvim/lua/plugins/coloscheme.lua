@@ -22,4 +22,13 @@ local nord = {
     end,
 }
 
-return nord
+local catppuccin = { 
+  "catppuccin/nvim", 
+  name = "catppuccin", 
+  priority = 1000,
+  config = function()
+    vim.cmd.colorscheme('catppuccin-frappe')
+  end,
+}
+
+return catppuccin
